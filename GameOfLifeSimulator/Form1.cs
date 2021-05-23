@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GameOfLifeSimulator.Properties;
 
 namespace GameOfLifeSimulator
 {
@@ -16,5 +17,56 @@ namespace GameOfLifeSimulator
         {
             InitializeComponent();
         }
+
+        private SettingsWindow settings;
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            settings = new SettingsWindow();
+            settings.Show();
+            settings.RestartRequested += SettingsOnRestartRequested;
+            settings.SettingChanged += Settings_SettingChanged;
+            Reset();
+        }
+
+        private void Settings_SettingChanged(object sender, EventArgs e)
+        {
+            Simulator.ChangeSettings(settings.ShowNew,
+                settings.ShowOld,
+                settings.ChangeChance,
+                settings.OldAge,
+                settings.Threshold,
+                settings.TwoLayer,
+                settings.DeathAge);
+        }
+
+        private void SettingsOnRestartRequested(object sender, EventArgs e)
+        {
+            Reset();
+        }
+
+        private void Reset()
+        {
+
+            timer1.Stop();
+            timer1.Interval = settings.Speed;
+            step = 0;
+            Simulator.Randomize(settings.SpawnChance,settings.BoardSize);
+            Settings_SettingChanged(this,EventArgs.Empty);
+            pictureBox1.Image = Simulator.RenderBoard();
+            timer1.Start();
+        }
+
+        private long step;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            step++;
+            Text = step.ToString();
+            timer1.Interval = settings.Speed;
+            Simulator.Step();
+            pictureBox1.Image = Simulator.RenderBoard();
+
+        }
+
+      
     }
 }
