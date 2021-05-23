@@ -49,18 +49,16 @@ namespace GameOfLifeSimulator
 
             timer1.Stop();
             timer1.Interval = settings.Speed;
-            step = 0;
+            Simulator.Tick = 0;
             Simulator.Randomize(settings.SpawnChance,settings.BoardSize);
             Settings_SettingChanged(this,EventArgs.Empty);
             pictureBox1.Image = Simulator.RenderBoard();
             timer1.Start();
         }
 
-        private long step;
         private void timer1_Tick(object sender, EventArgs e)
         {
-            step++;
-            Text = step.ToString();
+            Text = $"Step-{Simulator.Tick} LastUpdate-{Simulator.LastUpdate}";
             timer1.Interval = settings.Speed;
             Simulator.Step();
             pictureBox1.Image = Simulator.RenderBoard();

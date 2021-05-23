@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ namespace GameOfLifeSimulator
 {
     public class Cell
     {
+        public KeyValuePair<int, int> Location;
         public Cell[] Neighbors;
         public bool IsAlive;
         public bool IsNew => Generations <= 2;
@@ -14,20 +16,20 @@ namespace GameOfLifeSimulator
         public bool ShowOld { get; set; }
         public int Threshold { get; set; }
         public int DeathAge { get; set; }
-
+        public int LastUpdate;
         public bool TwoLayer;
         public int OldGeneration;
         public int Chance;
         private Random r = new Random();
-
-        public int Generations = 0;
+        private int LastChange;
+        public int Generations => Simulator.Tick - LastChange;
         public void Tick()
         {
-            var nearbyChanges = Neighbors.Any(n => n.Neighbors.Any(nn => nn.IsNew));
+            if (LastUpdate == Simulator.Tick)
+                return;
 
-            if (nearbyChanges)
-            {
 
+            LastUpdate = Simulator.Tick;
 
                 var living = Neighbors.Count(cell => cell.IsAlive);
 
@@ -38,21 +40,21 @@ namespace GameOfLifeSimulator
                 if (living == Threshold && !IsAlive)
                 {
                     IsAlive = r.NextBool(Chance);
-                    Generations = 0;
+                    LastChange = LastUpdate;
                 }
                 else if (IsAlive && (living < Threshold - 1 || living > Threshold + 1))
                 {
                     IsAlive = false;
-                    Generations = 0;
+                    LastChange = LastUpdate;
                 }
-            }
 
-            Generations++;
+
             if (DeathAge > 0 && Generations > DeathAge && IsAlive)
             {
-                Generations = 0;
+                LastChange = LastUpdate;
                 IsAlive = false;
             }
+
         }
 
         public Color GetColor()

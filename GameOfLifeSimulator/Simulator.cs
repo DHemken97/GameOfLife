@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Drawing;
@@ -7,20 +8,25 @@ namespace GameOfLifeSimulator
     public static class Simulator
     {
 
+        public static int Tick;
+        public static int LastUpdate;
         public static Cell[][] Board;
         public static Random r = new Random();
         private static int ChangeChance;
+        private static int Size;
+        private static Bitmap bufferImage;
         public static void Randomize(int chance, int size)
         {
+            Size = size;
             Board = new Cell[size][];
-
+            bufferImage = new Bitmap(size, size);
             for(var x=0; x<size; x++)
             {
                 Board[x] = new Cell[size];
 
                 for (var y = 0; y< size; y++)
                 {
-                    Board[x][y] = new Cell { IsAlive = r.NextBool(chance),Generations = 2, Chance = ChangeChance};
+                    Board[x][y] = new Cell { IsAlive = r.NextBool(chance), Chance = ChangeChance};
                 }
             }
             BindCells();
@@ -28,7 +34,6 @@ namespace GameOfLifeSimulator
 
         private static void BindCells()
         {
-            cells = Board.SelectMany(r => r).ToArray();
             var size = Board.GetLength(0);
             for (var x = 0; x < size; x++)
             {
@@ -47,6 +52,7 @@ namespace GameOfLifeSimulator
 
                     };
                    Board[x][y].Neighbors = n.Where(c => c != null).ToArray();
+                   Board[x][y].Location = new KeyValuePair<int, int>(x, y);
                 }
             }
         }
@@ -60,39 +66,48 @@ namespace GameOfLifeSimulator
         }
         public static Bitmap RenderBoard()
         {
-            var image = new Bitmap(Board.GetLength(0), Board.GetLength(0));
-            for (var x = 0; x < image.Width; x++)
+            var changed = ChangedCells.ToList();
+            foreach (var cell in changed)
             {
-
-                for (var y = 0; y < image.Height; y++)
-                {
-                    var cell = Board[x][y];
-                  image.SetPixel(x,y, cell.GetColor());
-                }
+                var location = cell.Location;
+                bufferImage.SetPixel(location.Key,location.Value, cell.GetColor());
             }
-
-            return image;
+            return bufferImage;
         }
 
+        public static void RenderWholeBoard()
+        {
+            for (var x = 0; x < bufferImage.Width; x++)
+            {
+
+                for (var y = 0; y < bufferImage.Height; y++)
+                {
+                    var cell = Board[x][y];
+                    bufferImage.SetPixel(x,y,cell.GetColor());
+                }
+            }
+        }
         public static bool NextBool(this Random r, int truePercentage = 50)
         {
             return r.NextDouble() < truePercentage / 100.0;
         }
 
-        private static Cell[] cells;
+        private static Cell[] ChangedCells => Board.SelectMany(row => row.Where(cell => cell.IsNew || cell.Generations==3)).ToArray();
         public static void Step()
         {
-             Task.WhenAll(StepRow(cells));
+            Tick++;
+             Task.WhenAll(StepRow(ChangedCells));
             //Task.WhenAll(Board.Select(StepRow));
-
+            if (Tick%50==0)
+                RenderWholeBoard();
         }
 
         private static async Task StepRow(Cell[] row)
         {
-             
+            LastUpdate = row.Length;    
             await Task.Run(() =>
             {
-                row.ToList().ForEach(c => c.Tick());
+                row.ToList().ForEach(c => c.Neighbors.ToList().ForEach(n => n.Tick()));
             });
         }
 
@@ -123,6 +138,7 @@ namespace GameOfLifeSimulator
                     
                 }
             }
+            RenderWholeBoard();
 
         }
     }
