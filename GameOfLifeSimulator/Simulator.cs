@@ -92,14 +92,14 @@ namespace GameOfLifeSimulator
             return r.NextDouble() < truePercentage / 100.0;
         }
 
-        private static Cell[] ChangedCells => Board.SelectMany(row => row.Where(cell => cell.IsNew || cell.Generations==3)).ToArray();
+        private static Cell[] ChangedCells => Board.SelectMany(row => row.Where(cell => 
+            cell.DrawUpdate
+        )).ToArray();
         public static void Step()
         {
             Tick++;
              Task.WhenAll(StepRow(ChangedCells));
             //Task.WhenAll(Board.Select(StepRow));
-            if (Tick%50==0)
-                RenderWholeBoard();
         }
 
         private static async Task StepRow(Cell[] row)

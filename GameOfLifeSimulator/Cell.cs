@@ -8,6 +8,21 @@ namespace GameOfLifeSimulator
 {
     public class Cell
     {
+        public bool DrawUpdate => HasUpdate();
+
+        private bool HasUpdate()
+        {
+            if (IsNew) return true;
+            if (Generations < OldGeneration && OldGeneration > 0) return true;
+            if (Generations == 3) return true;
+            var color = GetColor();
+            if (color.Name == LastColor.Name)
+                return false;
+            LastColor = color;
+            return true;
+        }
+
+        private Color LastColor;
         public KeyValuePair<int, int> Location;
         public Cell[] Neighbors;
         public bool IsAlive;

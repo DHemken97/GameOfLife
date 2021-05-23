@@ -91,7 +91,7 @@ namespace GameOfLifeSimulator
             // 
             this.numericUpDown2.Location = new System.Drawing.Point(95, 33);
             this.numericUpDown2.Maximum = new decimal(new int[] {
-            500,
+            5000,
             0,
             0,
             0});
