@@ -12,14 +12,10 @@ namespace GameOfLifeSimulator
 
         private bool HasUpdate()
         {
-            if (IsNew) return true;
-            if (Generations < OldGeneration && OldGeneration > 0) return true;
-            if (Generations == 3) return true;
-            var color = GetColor();
-            if (color.Name == LastColor.Name)
-                return false;
-            LastColor = color;
-            return true;
+            if (ShowOld && Generations > OldGeneration && OldGeneration > 0) return true;
+            if (IsAlive && Generations > DeathAge && DeathAge > 0) return true;
+            if (ShowNew && Generations <= 3) return true;
+            return false;
         }
 
         private Color LastColor;
