@@ -6,6 +6,7 @@ namespace GameOfLifeSimulator
     public partial class SettingsWindow : Form
     {
         public event EventHandler RestartRequested;
+        public event EventHandler RefreshRequested;
         public event EventHandler SettingChanged;
 
         public int SpawnChance => (int) numericUpDown1.Value;
@@ -68,6 +69,11 @@ namespace GameOfLifeSimulator
         private void numericUpDown7_ValueChanged(object sender, EventArgs e)
         {
             SettingChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            RefreshRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -25,7 +25,13 @@ namespace GameOfLifeSimulator
             settings.Show();
             settings.RestartRequested += SettingsOnRestartRequested;
             settings.SettingChanged += Settings_SettingChanged;
+            settings.RefreshRequested += Settings_RefreshRequested;
             Reset();
+        }
+
+        private void Settings_RefreshRequested(object sender, EventArgs e)
+        {
+            Simulator.StepAll();
         }
 
         private void Settings_SettingChanged(object sender, EventArgs e)

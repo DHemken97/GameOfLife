@@ -141,5 +141,11 @@ namespace GameOfLifeSimulator
             RenderWholeBoard();
 
         }
+
+        public static void StepAll()
+        {
+            Board.SelectMany(row => row.Select(cell => cell)).ToList().ForEach(c => c.Tick());
+            RenderWholeBoard();
+        }
     }
 }

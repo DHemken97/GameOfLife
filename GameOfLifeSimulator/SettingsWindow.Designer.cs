@@ -47,6 +47,7 @@ namespace GameOfLifeSimulator
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -58,7 +59,7 @@ namespace GameOfLifeSimulator
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(73, 324);
+            this.button1.Location = new System.Drawing.Point(10, 324);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -289,12 +290,23 @@ namespace GameOfLifeSimulator
             this.label7.TabIndex = 16;
             this.label7.Text = "Death Age";
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(140, 324);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 18;
+            this.button2.Text = "Update All";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // SettingsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(235, 359);
             this.ControlBox = false;
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.numericUpDown7);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.checkBox3);
@@ -349,5 +361,6 @@ namespace GameOfLifeSimulator
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.NumericUpDown numericUpDown7;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button button2;
     }
 }

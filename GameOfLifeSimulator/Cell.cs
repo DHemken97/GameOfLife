@@ -15,6 +15,7 @@ namespace GameOfLifeSimulator
             if (ShowOld && Generations > OldGeneration && OldGeneration > 0) return true;
             if (IsAlive && Generations > DeathAge && DeathAge > 0) return true;
             if (ShowNew && Generations <= 3) return true;
+            if (Generations == 1) return true;
             return false;
         }
 
