@@ -8,15 +8,19 @@ namespace GameOfLifeSimulator
         public event EventHandler RestartRequested;
         public event EventHandler RefreshRequested;
         public event EventHandler SettingChanged;
-
+        public event EventHandler ChangeStepRate;
         public int SpawnChance => (int) numericUpDown1.Value;
         public int BoardSize => (int) numericUpDown2.Value;
         public int ChangeChance => (int) numericUpDown3.Value;
-        public int Speed => (int) numericUpDown4.Value;
+        public double Speed => (double) numericUpDown4.Value;
         public bool ShowNew => checkBox1.Checked;
         public bool ShowOld => checkBox2.Checked;
         public int OldAge => (int)numericUpDown5.Value;
-        public int Threshold => (int)numericUpDown6.Value;
+        public int Threshold_lower => (int)numericUpDown6.Value;
+        public int Threshold_upper => (int)numericUpDown8.Value;
+
+        public int Threshold_lower_spawn => (int)numericUpDown9.Value;
+        public int Threshold_upper_spawn => (int)numericUpDown10.Value;
         public int DeathAge => (int)numericUpDown7.Value;
         public bool TwoLayer => checkBox3.Checked;
 
@@ -45,6 +49,10 @@ namespace GameOfLifeSimulator
 
         }
 
+        private void changeSpeed(object sender, EventArgs e)
+        {
+            ChangeStepRate?.Invoke(this, e);
+        }
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
         {
             SettingChanged?.Invoke(this, EventArgs.Empty);
@@ -64,6 +72,24 @@ namespace GameOfLifeSimulator
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
             SettingChanged?.Invoke(this, EventArgs.Empty);
+            if (checkBox3.Checked)
+            {
+                numericUpDown6.Maximum = 8;
+                numericUpDown8.Maximum = 8;
+                numericUpDown9.Maximum = 8;
+                numericUpDown10.Maximum = 8;
+            }
+            else
+            {
+                numericUpDown6.Maximum = 4;
+                numericUpDown8.Maximum = 4;
+                numericUpDown9.Maximum = 4;
+                numericUpDown10.Maximum = 4;
+                if (numericUpDown6.Value > 4) numericUpDown6.Value = 4;
+                if (numericUpDown8.Value > 4) numericUpDown8.Value = 4;
+                if (numericUpDown9.Value > 4) numericUpDown9.Value = 4;
+                if (numericUpDown10.Value > 4) numericUpDown10.Value = 4;
+            }
         }
 
         private void numericUpDown7_ValueChanged(object sender, EventArgs e)
@@ -74,6 +100,11 @@ namespace GameOfLifeSimulator
         private void button2_Click(object sender, EventArgs e)
         {
             RefreshRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Label6_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

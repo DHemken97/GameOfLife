@@ -117,7 +117,10 @@ namespace GameOfLifeSimulator
             bool showOld, 
             int changeChance, 
             int oldAge, 
-            int threshold,
+            int threshold_lower,
+            int threshold_upper,
+            int threshold_lower_spawn,
+            int threshold_upper_spawn,
             bool twoLayer,
             int deathAge)
         {
@@ -132,7 +135,10 @@ namespace GameOfLifeSimulator
                     Board[x][y].ShowNew = showNew;
                     Board[x][y].ShowOld = showOld;
                     Board[x][y].OldGeneration = oldAge;
-                    Board[x][y].Threshold = threshold;
+                    Board[x][y].Threshold_Lower = threshold_lower;
+                    Board[x][y].Threshold_Upper = threshold_upper;
+                    Board[x][y].Threshold_Lower_Spawn = threshold_lower_spawn;
+                    Board[x][y].Threshold_Upper_Spawn = threshold_upper_spawn;
                     Board[x][y].TwoLayer = twoLayer;
                     Board[x][y].DeathAge = deathAge;
                     
