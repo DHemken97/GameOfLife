@@ -102,9 +102,5 @@ namespace GameOfLifeSimulator
             RefreshRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        private void Label6_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

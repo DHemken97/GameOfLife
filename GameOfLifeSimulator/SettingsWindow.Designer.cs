@@ -277,7 +277,6 @@ namespace GameOfLifeSimulator
             this.label6.Size = new System.Drawing.Size(118, 13);
             this.label6.TabIndex = 13;
             this.label6.Text = "Lower Death Threshold";
-            this.label6.Click += new System.EventHandler(this.Label6_Click);
             // 
             // checkBox3
             // 
