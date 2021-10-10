@@ -12,21 +12,21 @@ namespace GameOfLifeSimulator
 
         private bool HasUpdate()
         {
-            if (ShowOld && Generations > OldGeneration && OldGeneration > 0) return true;
-            if (IsAlive && Generations > DeathAge && DeathAge > 0) return true;
-            if (ShowNew && Generations <= 3) return true;
-            if (Generations == 1) return true;
-            return false;
+            int lifeQuotient = Neighbors.Count(cell => cell.IsAlive);
+            Generations = Simulator.Tick - LastChange;
+            return (Generations == 1) || (IsAlive && Generations == DeathAge+1 && DeathAge > 0) || (!IsAlive && lifeQuotient >= Threshold_Lower_Spawn && lifeQuotient <= Threshold_Upper_Spawn ) || (IsAlive && lifeQuotient > Threshold_Lower && lifeQuotient < Threshold_Upper) || (ShowNew && Generations == 3) || (ShowOld && Generations == OldGeneration+1 && OldGeneration > 0);
         }
 
-        private Color LastColor;
         public KeyValuePair<int, int> Location;
         public Cell[] Neighbors;
         public bool IsAlive;
         public bool IsNew => Generations <= 2;
-        public bool ShowNew { get; set; }
+        public bool ShowNew { get; set; } 
         public bool ShowOld { get; set; }
-        public int Threshold { get; set; }
+        public int Threshold_Upper { get; set; }
+        public int Threshold_Lower { get; set; }
+        public int Threshold_Lower_Spawn { get; set; }
+        public int Threshold_Upper_Spawn { get; set; }
         public int DeathAge { get; set; }
         public int LastUpdate;
         public bool TwoLayer;
@@ -34,7 +34,7 @@ namespace GameOfLifeSimulator
         public int Chance;
         private Random r = new Random();
         private int LastChange;
-        public int Generations => Simulator.Tick - LastChange;
+        public int Generations;
         public void Tick()
         {
             if (LastUpdate == Simulator.Tick)
@@ -49,12 +49,12 @@ namespace GameOfLifeSimulator
                     living = Neighbors.SelectMany(n => n.Neighbors).Count(n => n.IsAlive);
 
 
-                if (living == Threshold && !IsAlive)
+                if (living == Threshold_Upper && !IsAlive)
                 {
                     IsAlive = r.NextBool(Chance);
                     LastChange = LastUpdate;
                 }
-                else if (IsAlive && (living < Threshold - 1 || living > Threshold + 1))
+                else if (IsAlive && (living < Threshold_Lower  || living > Threshold_Upper))
                 {
                     IsAlive = false;
                     LastChange = LastUpdate;
@@ -71,13 +71,8 @@ namespace GameOfLifeSimulator
 
         public Color GetColor()
         {
-            if (IsAlive)
-                return ShowNew&&IsNew ? Color.Green : Color.White;
-            if (ShowNew && IsNew)
-                return Color.Red;
             
-                return ShowOld&&Generations>OldGeneration ? Color.Blue : Color.Black;
-
+            return ShowNew&&IsNew ? IsAlive ? Color.Green : Color.Red : IsAlive ? Color.White : ShowOld && Generations > OldGeneration ? Color.Blue : Color.Black;
 
         }
     }

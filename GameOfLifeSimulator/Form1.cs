@@ -26,6 +26,7 @@ namespace GameOfLifeSimulator
             settings.RestartRequested += SettingsOnRestartRequested;
             settings.SettingChanged += Settings_SettingChanged;
             settings.RefreshRequested += Settings_RefreshRequested;
+            settings.StepRateChanged += Settings_StepRateChanged;
             Reset();
         }
 
@@ -34,13 +35,20 @@ namespace GameOfLifeSimulator
             Simulator.StepAll();
         }
 
+        private void Settings_StepRateChanged(object sender, EventArgs e)
+        {
+            timer1.Interval = (int)(1000/settings.Speed);
+        }
         private void Settings_SettingChanged(object sender, EventArgs e)
         {
             Simulator.ChangeSettings(settings.ShowNew,
                 settings.ShowOld,
                 settings.ChangeChance,
                 settings.OldAge,
-                settings.Threshold,
+                settings.Threshold_lower,
+                settings.Threshold_upper,
+                settings.Threshold_lower_spawn,
+                settings.Threshold_upper_spawn,
                 settings.TwoLayer,
                 settings.DeathAge);
         }
@@ -54,7 +62,7 @@ namespace GameOfLifeSimulator
         {
 
             timer1.Stop();
-            timer1.Interval = settings.Speed;
+            timer1.Interval = (int)(1000/settings.Speed);
             Simulator.Tick = 0;
             Simulator.Randomize(settings.SpawnChance,settings.BoardSize);
             Settings_SettingChanged(this,EventArgs.Empty);
@@ -65,7 +73,6 @@ namespace GameOfLifeSimulator
         private void timer1_Tick(object sender, EventArgs e)
         {
             Text = $"Step-{Simulator.Tick} LastUpdate-{Simulator.LastUpdate}";
-            timer1.Interval = settings.Speed;
             Simulator.Step();
             pictureBox1.Image = Simulator.RenderBoard();
 
