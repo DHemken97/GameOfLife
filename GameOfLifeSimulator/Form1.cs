@@ -26,7 +26,7 @@ namespace GameOfLifeSimulator
             settings.RestartRequested += SettingsOnRestartRequested;
             settings.SettingChanged += Settings_SettingChanged;
             settings.RefreshRequested += Settings_RefreshRequested;
-            settings.ChangeStepRate += Settings_ChangeStepRate;
+            settings.StepRateChanged += Settings_StepRateChanged;
             Reset();
         }
 
@@ -35,7 +35,7 @@ namespace GameOfLifeSimulator
             Simulator.StepAll();
         }
 
-        private void Settings_ChangeStepRate(object sender, EventArgs e)
+        private void Settings_StepRateChanged(object sender, EventArgs e)
         {
             timer1.Interval = (int)(1000/settings.Speed);
         }

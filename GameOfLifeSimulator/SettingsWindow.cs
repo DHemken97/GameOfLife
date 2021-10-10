@@ -8,7 +8,7 @@ namespace GameOfLifeSimulator
         public event EventHandler RestartRequested;
         public event EventHandler RefreshRequested;
         public event EventHandler SettingChanged;
-        public event EventHandler ChangeStepRate;
+        public event EventHandler StepRateChanged;
         public int SpawnChance => (int) numericUpDown1.Value;
         public int BoardSize => (int) numericUpDown2.Value;
         public int ChangeChance => (int) numericUpDown3.Value;
@@ -51,7 +51,7 @@ namespace GameOfLifeSimulator
 
         private void changeSpeed(object sender, EventArgs e)
         {
-            ChangeStepRate?.Invoke(this, e);
+            StepRateChanged?.Invoke(this, e);
         }
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
         {
